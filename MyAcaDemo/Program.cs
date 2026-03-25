@@ -1,17 +1,11 @@
-using Microsoft.VisualBasic;
-
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services here
-// builder.Services.AddControllers();
-// builder.Services.AddDbContext<StoreContext>();
-
+// Bind to port 8080
 builder.WebHost.UseUrls("http://*:8080");
 
 var app = builder.Build();
 
-// Configure middleware here
-// app.UseRouting();
-// app.MapControllers();
+// Example endpoint so you don’t get 404
+app.MapGet("/", () => "Hello from port 8080!");
 
 app.Run();
