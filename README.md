@@ -26,9 +26,26 @@ public class Program
             });
 }
 
+$$replace code with code below : error - Calling webBuilder.UseStartup<Startup>() inside CreateHostBuilder() triggers $$errors because the new hosting model expects configuration directly in Program.cs
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Bind to port 8080
+builder.WebHost.UseUrls("http://*:8080");
+
+var app = builder.Build();
+
+// Example endpoint so you don’t get 404
+app.MapGet("/", () => "Hello from port 8080!");
+
+app.Run();
+
+
+
 //Implementing the Program class with this code creates the basis of a web //application. Next, create a class responsible for returning a web page as a //response.
 
 //In the same folder, create a new file named Startup.cs and enter the following //code.
+$$REMOVED THIS FILE FROM PROJECT
 public class Startup
 {
     public void ConfigureServices(IServiceCollection services)
@@ -101,12 +118,14 @@ IDENTITY_ID=$(az identity show \
   --output tsv)
 
 //Create a Container Apps environment to host your app using the following //command.
+MSYS2_ARG_CONV_EXCL="*" \
 az containerapp env create --name $ENVIRONMENT --resource-group $RESOURCE_GROUP --location $LOCATION --mi-user-assigned $IDENTITY_ID --output none
 
 //Create an Azure Container Registry (ACR) instance in your resource group. The //registry stores your container image.
 az acr create --resource-group $RESOURCE_GROUP --name $REGISTRY_NAME --sku Basic --output none
 
 //Assign your user-assigned managed identity to your container registry instance //with the following command.
+MSYS2_ARG_CONV_EXCL="*" \
 az acr identity assign --identities $IDENTITY_ID --name $REGISTRY_NAME --resource-group $RESOURCE_GROUP --output none
 
 #Build and push the image to a registry
@@ -120,6 +139,7 @@ az acr build -t $REGISTRY_NAME".azurecr.io/"$CONTAINER_APP_NAME":helloworld" -r 
 //Create your container app with the following command.
 
 //This command adds the acrPull role to your user-assigned managed identity, so //it can pull images from your container registry
+MSYS2_ARG_CONV_EXCL="*" \
 az containerapp create --name $CONTAINER_APP_NAME --resource-group $RESOURCE_GROUP --environment $ENVIRONMENT --image $REGISTRY_NAME".azurecr.io/"$CONTAINER_APP_NAME":helloworld" --target-port 8080 --ingress external --user-assigned $IDENTITY_ID --registry-identity $IDENTITY_ID --registry-server $REGISTRY_NAME.azurecr.io --query properties.configuration.ingress.fqdn
 
 Parameter 	Value 	Description
