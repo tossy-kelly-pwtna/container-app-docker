@@ -165,3 +165,56 @@ az group delete --name aca-demo
 #Next steps
 //make changes to your code and update your app in Azure.
 https://learn.microsoft.com/en-us/azure/container-apps/tutorial-update-from-code
+
+#Setup
+//Run the following command to query for the container registry you created in the last tutorial.
+az acr list --query "[].{Name:name}" --output table
+
+//Replace the contents of Startup.cs with the following code.
+//This version of the code registers a logger to write information //out to the console and the Container Apps log stream.
+RESOURCE_GROUP="my-demo-group"
+CONTAINER_APP_NAME="my-demo-app"
+REGISTRY_NAME="mydemoregistry0e1267db"
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapGet("/", async context =>
+            {
+                logger.LogInformation("Hello Logger!");
+                await context.Response.WriteAsync("Hello Logger!");
+            });
+
+//Build your project in Release configuration.
+dotnet build -c Release
+
+//Next, run your application to verify your code is implemented //correctly.
+dotnet run --configuration Release
+
+#Build and push the image to a registry
+//To ensure tag used for your registry is unique, use the following command to create a tag name
+IMAGE_TAG=$(date +%s)
+
+//Now you can build and push your new container image to the registry using the following command.
+az acr build -t $REGISTRY_NAME.azurecr.io/$CONTAINER_APP_NAME:$IMAGE_TAG -r $REGISTRY_NAME .
+
+#Create a new revision
+//You can create a new revision of your container app based on the new container image you pushed to your registry.
+az containerapp revision copy \
+  --name $CONTAINER_APP_NAME \
+  --resource-group $RESOURCE_GROUP \
+  --image "$REGISTRY_NAME.azurecr.io/$CONTAINER_APP_NAME:$IMAGE_TAG" \
+  --output none
+
+#Verify deployment
+//Now that your application is deployed, you can query for the URL with this command.
+az containerapp show --name $CONTAINER_APP_NAME --resource-group $RESOURCE_GROUP --query properties.configuration.ingress.fqdn -o tsv
+
+#Query log stream
+//see the messages being logged in the log stream
+az containerapp logs show --name $CONTAINER_APP_NAME --resource-group $RESOURCE_GROUP --follow
+
+#Clean up resources
+az group delete --name my-demo-group
+
+NEXT STEPS
+https://learn.microsoft.com/en-us/azure/container-apps/

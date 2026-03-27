@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MyAcaDemo")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1d4b355bfd7ccede5da4c435040097e366ed2778")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+75f2232f0f877f571974775b71ffa34804c01aa6")]
 [assembly: System.Reflection.AssemblyProductAttribute("MyAcaDemo")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MyAcaDemo")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
